@@ -10,8 +10,17 @@ const pool = new Pool({
 
 // ২. টেলিগ্রাম বট কানেকশন
 // টোকেন এরর হলে সরাসরি ' ' এর ভেতর আপনার টোকেনটি বসান
-const token = process.env.BOT_TOKEN || 'আপনার_টোকেন_এখানে_দিন'; 
+const token = process.env.BOT_TOKEN ? process.env.BOT_TOKEN.trim() : ""; || 'আপনার_টোকেন_এখানে_দিন'; 
+if (!token) {
+  console.error("Error: BOT_TOKEN is missing in environment variables!");
+  process.exit(1);
+}
+
 const bot = new TelegramBot(token, { polling: true });
+// পোলিং এরর হ্যান্ডেল করার জন্য এই অংশটি যোগ করুন
+bot.on('polling_error', (error) => {
+  console.log(`[Polling Error]: ${error.code} - ${error.message}`);
+});
 
 console.log("Bot is starting...");
 
